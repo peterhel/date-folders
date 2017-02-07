@@ -1,5 +1,9 @@
 # Date Folders
 
+### installation
+
+    npm i -g date-folders
+
 Yeah ok... well, have you ever had a folder filled with images? Do you like the way many photo apps structure them like:
 
     .
