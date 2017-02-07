@@ -26,6 +26,6 @@ This gives you a nicely formatted output to pipe to xargs or whatever. You will 
 
 Later.
 
-Ok I'll give you an example
+If you want help moving the files, try:
 
-   dfold | xargs -n 2 -I {} bash -c 'mv "{1}" "{2}"'
+    dfold --execute
