@@ -2,6 +2,8 @@
 
 const fs = require('fs');
 
+const [, , flag] = process.argv;
+
 const mvinst = {};
 const files = fs.readdirSync(process.cwd());
 
@@ -10,10 +12,16 @@ files.forEach(file => {
   if(!stat.isFile()) {
     return;
   }
+
   const birth = new Date(stat.birthtime);
   const year = `${birth.getFullYear()}`;
   const month = `0${birth.getMonth() + 1}`.slice(-2);
   const date = `0${birth.getDate()}`.slice(-2);
+
+  if(flag !== '--execute') {
+    console.log(`"${file}" "${year}/${month}/${date}/"`);
+    return;
+  }
 
   if(!fs.existsSync(year)) {
     fs.mkdirSync(year);
@@ -27,5 +35,5 @@ files.forEach(file => {
     fs.mkdirSync(`${year}/${month}/${date}`);
   }
 
-  console.log(`${file} ${year}/${month}/${date}/`)
+  fs.renameSync(file, `${year}/${month}/${date}/${file}`)
 });

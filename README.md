@@ -25,3 +25,7 @@ Just cd into the flat boring folder with shitloads of files and hit `dfold`. THE
 This gives you a nicely formatted output to pipe to xargs or whatever. You will also see what files you have. Maybe you didn't think it through at all. And most important of all: You can't blame me for fucking up you wonderful wedding pics.
 
 Later.
+
+Ok I'll give you an example
+
+   dfold | xargs -n 2 -I {} bash -c 'mv "{1}" "{2}"'
