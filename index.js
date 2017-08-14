@@ -4,11 +4,47 @@ const fs = require('fs');
 const ExifImage = require('exif').ExifImage;
 const [, , flag] = process.argv;
 
+async function getTimestamp(file) {
+  let timestamp;
+  try {
+    timestamp = await getStatTimestamp(file);
+    return await getExifTimestamp(file);
+  } catch (exception) {
+    if(exception.isNotFile) {
+      return Promise.reject(exception);
+    }
+    console.error(exception);
+    return Promise.resolve(timestamp);
+  }
+}
+
+async function getExifTimestamp(file) {
+  return new Promise((resolve, reject) => {
+    try {
+      new ExifImage({ image : file }, function (error, exifData) {
+        if (error)
+          reject(error);
+        else {
+          try {
+            const [, year, month, date] = /^(\d{4}):(\d{2}):(\d{2})/.exec(exifData.exif.DateTimeOriginal);
+            resolve({year, month, date});
+          } catch(err) {
+            reject(err);
+          }
+        }
+      });
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
 async function getStatTimestamp(file) {
   const stat = fs.statSync(file);
   if(!stat.isFile()) {
     return Promise.reject({
-      error: 'Is not file'
+      isNotFile: true,
+      error: `${file} is not file`
     });
   }
   
@@ -30,7 +66,7 @@ async function getStatTimestamp(file) {
   files.forEach(async (file) => {
     let year, month, date;
     try {
-      const timestamp = await getStatTimestamp(file);
+      const timestamp = await getTimestamp(file);
       year = timestamp.year;
       month = timestamp.month;
       date = timestamp.date;
