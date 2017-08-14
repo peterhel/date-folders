@@ -10,5 +10,8 @@
   "license": "ISC",
   "bin": {
     "dfold": "./index.js"
+  },
+  "dependencies": {
+    "exif": "^0.6.0"
   }
 }
